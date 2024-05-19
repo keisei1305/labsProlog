@@ -78,7 +78,39 @@ remove_by_sum([H|T], Sum, ResultList):-(sum_digits_down(H, NumSum),
 										remove_by_sum(T, Sum, ResultList)),!.
 remove_by_sum([H|T], Sum, ResultList):- append(ResultList, [H], NewList), remove_by_sum(T, Sum, NewList), !.
 
-%max_digit_in_num(+X, -Y).
+%max_digit_in_num_down(+X, -Y).
 %DESCRIPTION:
-%Предикат, который находит максимальную цифру в числе
-max_digit_in_num(X, Y):-
+%Предикат, который находит максимальную цифру в числе. Рекурсией вниз.
+max_digit_in_num_down(X, Y):- max_digit_in_num_down(X, 0, Y).
+max_digit_in_num_down(0, Max, Max):-!.
+max_digit_in_num_down(X, Max, Y):- CurD is (X mod 10), Max > CurD, X1 is X//10, max_digit_in_num_down(X1, Max, Y), !.
+max_digit_in_num_down(X, Max, Y):- CurD is (X mod 10), X1 is X//10, max_digit_in_num_down(X1, CurD, Y), !.
+
+%max_digit_in_num_up(+X, -Y).
+%DESCRIPTION:
+%Предикат, который находит максимальную цифру в числе. Рекурсией вверх.
+max_digit_in_num_up(0, 0):-!.
+max_digit_in_num_up(X, Y):- X1 is X//10, max_digit_in_num_up(X1, Y1), Y1 > (X mod 10), Y is Y1, !.
+max_digit_in_num_up(X, Y):- Y is (X mod 10), !.
+
+%min_digit_in_num_down(+X, -Y).
+%DESCRIPTION:
+%Предикат, который находит минимальную, нечётную цифру в числе. Рекурсией вниз.
+min_digit_in_num_down(X, Y):- min_digit_in_num_down(X, 9, Y).
+min_digit_in_num_down(0, Min, Min):-!.
+min_digit_in_num_down(X, Min, Y):- CurD is (X mod 10), CurD < Min, (CurD mod 2)=:=1, X1 is X//10, min_digit_in_num_down(X1, CurD, Y), !.
+min_digit_in_num_down(X, Min, Y):- X1 is X//10, min_digit_in_num_down(X1, Min, Y), !.
+
+%min_digit_in_num_down(+X, -Y).
+%DESCRIPTION:
+%Предикат, который находит минимальную, нечётную цифру в числе. Рекурсией вверх.
+min_digit_in_num_up(0, 9):-!.
+min_digit_in_num_up(X, Y):- X1 is X//10, min_digit_in_num_up(X1, Y1), CurD is (X mod 10), 
+							(CurD < Y1, (CurD mod 2) =:= 1 -> Y is CurD; Y is Y1 ),!.
+
+%nod_down(+X, +Y, -Z)
+%DESCRIPTION:
+%Найти НОД двух чисел.
+nod(X, 0, X):- !.
+nod(_, 0, _):- !, fail.
+nod(X, Y, Z):- Ost is (X mod Y), nod(Y, Ost, Z).
