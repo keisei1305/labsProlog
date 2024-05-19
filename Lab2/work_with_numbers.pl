@@ -39,7 +39,7 @@ sum_digits_down(S, X, Y):- S1 is S + X mod 10, X1 is X//10, sum_digits_down(S1, 
 %DESCRIPTION:
 %Предикат, проверяющий является ли X свободным от квадратов
 free_from_square(X):- MaxDel is (X // 2) + 1, free_from_square(2, MaxDel, X), !, true.
-free_from_square(MaxDel, MaxDel, X):-!.
+free_from_square(MaxDel, MaxDel, _):-!.
 free_from_square(N, MaxDel, X):- Square is N * N, Ost is X mod Square, Ost \= 0, NextN is N + 1, free_from_square(NextN, MaxDel, X).
 
 %read_list(-List, N).
@@ -84,7 +84,7 @@ remove_by_sum([H|T], Sum, ResultList):- append(ResultList, [H], NewList), remove
 max_digit_in_num_down(X, Y):- max_digit_in_num_down(X, 0, Y).
 max_digit_in_num_down(0, Max, Max):-!.
 max_digit_in_num_down(X, Max, Y):- CurD is (X mod 10), Max > CurD, X1 is X//10, max_digit_in_num_down(X1, Max, Y), !.
-max_digit_in_num_down(X, Max, Y):- CurD is (X mod 10), X1 is X//10, max_digit_in_num_down(X1, CurD, Y), !.
+max_digit_in_num_down(X, _, Y):- CurD is (X mod 10), X1 is X//10, max_digit_in_num_down(X1, CurD, Y), !.
 
 %max_digit_in_num_up(+X, -Y).
 %DESCRIPTION:
@@ -133,5 +133,41 @@ unique_el([E, E, U|_], Z):- U\=E, Z is U.
 unique_el([_|T], Z):- unique_el(T, Z), !.
 
 
+%count_in_interval/0.
+%DESCRIPTION:
+%Сценарий для подсчёта элементов, которые лежат в интервале A..B.
+count_in_interval:-
+	write("Task 14: Find nums between A,B"), nl,
+	write("Enter A"), nl, read(A),
+	write("Enter B"), nl ,read(B),
+	write("Enter list length"), nl, read(Len),
+	write("Enter list elements"), nl, read_list(List, Len),
+	write("Answer: "), count_in_interval(List,A,B, Answer), write(Answer).
 
+%count_in_interval(+X, +A, +B, -Z).
+%DESCRIPTION:
+%Посчитать количество элементов, которые лежат в интервале A..B.
+count_in_interval([H|T], A, B, Z):-H>A, H<B, 
+								count_in_interval(T, A, B, Z1), Z is Z1+1, !.
+count_in_interval([_|T], A, B, Z):-count_in_interval(T, A, B, Z1), Z is Z1, !.
+count_in_interval([], _, _, 0):-!.
 
+%count_in_interval/0.
+%DESCRIPTION:
+%Сценарий для подсчёта элементов, которые лежат в интервале A..B.
+max_in_interval:-
+	write("Task 2: Find max between A,B"), nl,
+	write("Enter A"), nl, read(A),
+	write("Enter B"), nl ,read(B),
+	write("Enter list length"), nl, read(Len),
+	write("Enter list elements"), nl, read_list(List, Len),
+	write("Answer: "), max_in_interval(List, A, B, Answer), write(Answer).
+
+%max_in_interval(+X, +A, +B, -Z).
+%DESCRIPTION:
+%Найти макс в интервале A..B.
+max_in_interval([H|T], A, B, Z):- H>A, H<B,
+								max_in_interval(T, A, B, Z1), 
+								(H > Z1 -> Z is H; Z is Z1).
+max_in_interval([_|T], A, B, Z):-max_in_interval(T, A, B, Z1), Z is Z1, !.
+max_in_interval([], _, _, 0):-!.
