@@ -114,3 +114,24 @@ min_digit_in_num_up(X, Y):- X1 is X//10, min_digit_in_num_up(X1, Y1), CurD is (X
 nod(X, 0, X):- !.
 nod(_, 0, _):- !, fail.
 nod(X, Y, Z):- Ost is (X mod Y), nod(Y, Ost, Z).
+
+%unique_el/0.
+%DESCRIPTION:
+%Сценарий для нахождения уникального элемента
+unique_el:-
+	write("Task 11: get unique element in list"), nl,
+	write("Enter list length"), nl, read(Len),
+	write("Enter list elements"), nl, read_list(List, Len),
+	write("Answer: "), unique_el(List, Answer), write(Answer).
+
+%unique_el(+X, -Z).
+%DESCRIPTION:
+%Найти уникальный элемент в X
+unique_el([U, E, E|_], Z):- U\=E, Z is U.
+unique_el([E, U, E|_], Z):- U\=E, Z is U.
+unique_el([E, E, U|_], Z):- U\=E, Z is U.
+unique_el([_|T], Z):- unique_el(T, Z), !.
+
+
+
+
