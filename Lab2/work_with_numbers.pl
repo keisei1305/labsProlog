@@ -221,34 +221,103 @@ sum_dividers_with_condition(X, Y, Proizv, Sum, CurDel):- CurDel1 is CurDel-1, !,
 														 	nod(CurDel, Proizv, R2), R2=\=1-> 
 														 	Y is Y1 + CurDel; Y is Y1).
 
-%p(+X, -Y)
-%DESCRIPTION:
+
 %Пентагональные числа P(n)=n(3n-1)/2
 %P(n)<1.000.000, найти пару P(i),P(j) => (P(i)+P(j)) is P(n) and P(i)-P(j) in P(n),
 %|i-j|->min, max(n) - 816
 %Для P(n) <1.000.000 решений не найдено, переделал под 10.000.000, max(n) - 2582
+
+%p(+X, -Y)
+%DESCRIPTION:
+%Считает пентагональное число, под номером X
 p(X, Y):- Y is (X*(3*X-1)/2).
 
 %D=1+24P, x1 = 1+sqrt(1+24P)/6, 
 %if (x1 is int and x1 mod 6 ==0)-> vse horosho
+
+%is_p(+P)
+%DESCRIPTION:
+%Предикат, проверяющий число на пентагональность
 is_p(P):- X is integer((1+sqrt(1+24*P))/6), p(X, Y), Y=:=P.
 
+%is_p(+P, -X)
 is_p(P, X):-X is integer((1+sqrt(1+24*P))/6), p(X, Y), Y=:=P.
 
+
+%find_p
+%DESCRIPTION:
+%Сценарий, для нахождения двух пентагональных чисел, удовлетворяющих условию задачи
 find_p:- find_p(1, 1, Y1, Y2),
 	write("Searching..."),nl,
 	write("First n: "), write(Y1), p(Y1, P1), write("   First P(n): "), write(P1), nl,
 	write("Second n: "), write(Y2), p(Y2, P2), write("   Second P(n): "), write(P2), nl,
 	write("Sum n: "), SumP is P1+P2, is_p(SumP, SumN), write(SumN), write("   Sum P(n): "), write(SumP), nl,
 	write("Diff n: "), DiffP is abs(P1-P2), is_p(DiffP, DiffN), write(DiffN), write("   Diff P(n): "), write(DiffP), nl,
-	write("Different: "), Different is Y2-Y1,write(Different).
+	write("Difference: "), Different is Y2-Y1,write(Different).
 
+%find_p(+X, +D, -Y1, -Y2)
+%DESCRIPTION:
+%Предикат, который отслеживает ограничение разници между числами
 find_p(_, D, Y1, Y2):- D>2582, Y1 is 0, Y2 is 0.
 
+%DESCRIPTION:
+%Предикат, который отслеживает ограничение пентагональных чисел
 find_p(X1, D, Y1, Y2):- X2 is X1+D, X2>2582, NewD is D+1, find_p(1, NewD, Y1, Y2).
 
+%DESCRIPTION
+%Предикат, который проверяет пару чисел на удовлетворение условий
 find_p(X1, D, Y1, Y2):- X2 is X1+D, p(X1, P1), p(X2, P2), 
 					SumP is P1+P2, is_p(SumP),
 					DiffP is abs(P1-P2), is_p(DiffP), Y1 is X1, Y2 is X2.
 
+%DESCRIPTION:
+%Предикат, перебирающий номера пентагональных чисел
 find_p(X1, D, Y1, Y2):- X2 is X1+1, find_p(X2, D, Y1, Y2), !.
+
+
+
+
+%in_list(+List, +El)
+%DESCRIPTION:
+%Ищет элемент в листе
+in_list([El|_], El).
+in_list([_|T], El):-in_list(T, El).
+
+%count_repeat(+List, +El, -X)
+%DESCRIPTION:
+%Считает количество повторений
+count_repeat([], _, 0):-!.
+count_repeat([H|T], El, X):- H==El, count_repeat(T, El, X1), X is (X1 + 1), !.
+count_repeat([_|T], El, X):- count_repeat(T, El, X1), X is X1, !.
+
+%max_repeat(+List, -X)
+%DESCRIPTION:
+%Считает максимальное количество повторений элемента в List и возвращает этот элемент
+max_repeat(List, X):- max_repeat(List, List, 0, 0, [], X), !.
+max_repeat([], _, MaxNum, _, _, MaxNum):-!.
+max_repeat([H|T], List, MaxNum, MaxCount, Cache, X):- in_list(Cache, H), max_repeat(T, List, MaxNum, 
+																					MaxCount, Cache, X), !.
+max_repeat([H|T], List, _, MaxCount, Cache, X):- count_repeat(List, H, Y), 
+													Y>MaxCount, append(Cache, [H], NewCache), 
+													max_repeat(T, List, H, Y, NewCache, X), !.
+max_repeat([H|T], List, MaxNum, MaxCount, Cache, X):- append(Cache, [H], NewCache),
+													max_repeat(T, List, MaxNum, MaxCount, NewCache, X),!.
+
+%get_indices/0.
+%DESCRIPTION:
+%Сценарий для нахождения индексов максимального элемента.
+get_indices:-
+	write("Task 48: Finds max element indices"), nl,
+	write("Enter list length"), nl, read(Len),
+	write("Enter list elements"), nl, read_list(List, Len),
+	write("Answer: "), max_repeat(List, Max), nl,
+	get_indices(List, Max, Answer), write_list(Answer).
+
+%get_indices(+List, +El, -Result)
+%DESCRIPTION:
+%Получает лист индексов элементов равных El
+get_indices(List, El, Result):- get_indices(List, El, [], Result, 0), !.
+get_indices([], _, Cache, Cache, _):-!.
+get_indices([H|T], El, Cache, Result, Index):- H==El, NewIndex is Index+1, append(Cache,[Index], NewCache),
+									get_indices(T, El, NewCache, Result, NewIndex), !.
+get_indices([_|T], El, Cache, Result, Index):- NewIndex is Index + 1, get_indices(T, El, Cache, Result, NewIndex), !.
