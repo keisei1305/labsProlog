@@ -26,14 +26,14 @@ fact_down(X1, Y1, X, Y):- X2 is X1+1, Y2 is Y1*X2, fact_down(X2, Y2, X, Y).
 %DESCRIPTION:
 %Сумма цифр числа рекурсией вверх
 sum_digits_up(0, 0):-!.
-sum_digits_up(X, Y):- X1 is X//10, sum_digits_up(X1, Y1), Y is Y1 + X mod 10.
+sum_digits_up(X, Y):- X1 is X//10, sum_digits_up(X1, Y1), Y is Y1 + (X mod 10).
 
 %sum_digits_down(+X, -Y)
 %DESCRIPTION:
 %Сумма цифр числа рекурсией вниз
 sum_digits_down(X, Y):-sum_digits_down(0, X, Y).
 sum_digits_down(Y, 0, Y):-!.
-sum_digits_down(S, X, Y):- S1 is S + X mod 10, X1 is X//10, sum_digits_down(S1, X1, Y).
+sum_digits_down(S, X, Y):- S1 is S + (X mod 10), X1 is X//10, sum_digits_down(S1, X1, Y).
 
 %free_from_square(+X)
 %DESCRIPTION:
@@ -156,7 +156,7 @@ count_in_interval([], _, _, 0):-!.
 %DESCRIPTION:
 %Сценарий для подсчёта элементов, которые лежат в интервале A..B.
 max_in_interval:-
-	write("Task 2: Find max between A,B"), nl,
+	write("Task 25: Find max between A,B"), nl,
 	write("Enter A"), nl, read(A),
 	write("Enter B"), nl ,read(B),
 	write("Enter list length"), nl, read(Len),
@@ -171,3 +171,52 @@ max_in_interval([H|T], A, B, Z):- H>A, H<B,
 								(H > Z1 -> Z is H; Z is Z1).
 max_in_interval([_|T], A, B, Z):-max_in_interval(T, A, B, Z1), Z is Z1, !.
 max_in_interval([], _, _, 0):-!.
+
+count_dividers_undivisible_by3:-
+	write("Task 11: Find count dividers, that undivisible by 3"), nl,
+	write("Enter Num"), nl, read(X),
+	write("Answer: "), count_dividers_undivisible_by3(X, Answer), write(Answer).
+
+%count_dividers_undivisible_by3(+X, -Y)
+%DESCRIPTION:
+%Найти количество делителей, не делящихся на 3
+count_dividers_undivisible_by3(X, Y):- MaxDel is (X//2)+1, count_dividers_undivisible_by3(X, MaxDel, Y1),
+									((X mod 3)=\=0 ->Y is Y1+1;Y is Y1).
+count_dividers_undivisible_by3(_,1,1):-!.
+count_dividers_undivisible_by3(X, CurDel,Y):- CurDel1 is CurDel-1,!, count_dividers_undivisible_by3(X,CurDel1 ,Y1),
+									((CurDel mod 3)=\=0, (X mod CurDel)=:=0 ->Y is Y1+1;Y is Y1).
+
+%proizved_digits_in_num(+X, -Y)
+%DESCRIPTION:
+%Предикат, считающий произведение всех цифр в числе
+proizved_digits_in_num(0, 1):-!.
+proizved_digits_in_num(X, Y):- X1 is X//10, proizved_digits_in_num(X1, Y1), Y is Y1 * (X mod 10).
+
+
+%sum_dividers_with_condition(+X, -Y).
+%DESCRIPTION:
+%Сценарий, считающий сумму всех делителей числа,
+%взаимно простых с суммой цифр числа 
+%и не взаимно простых с суммой простых цифр этого числа
+sum_dividers_with_condition:-
+	write("Task 11: Find count dividers with condition"), nl,
+	write("Enter Num"), nl, read(X),
+	write("Answer: "), sum_dividers_with_condition(X, Answer), write(Answer).
+
+%sum_dividers_with_condition(+X, -Y).
+%DESCRIPTION:
+%Предикат, считающий сумму всех делителей числа,
+%взаимно простых с суммой цифр числа 
+%и не взаимно простых с суммой простых цифр этого числа
+sum_dividers_with_condition(X, Y):- proizved_digits_in_num(X, Proizv), sum_digits_up(X, Sum),
+									MaxDel is (X//2)+1,
+									sum_dividers_with_condition(X, Y1, Proizv, Sum, MaxDel),
+									(nod(X, Sum, R1), R1=:=1,
+									nod(X, Proizv, R2), R2=\=1-> 
+									Y is Y1 + X; Y is Y1).
+sum_dividers_with_condition(_, 0, _, _, 1):-!.
+sum_dividers_with_condition(X, Y, Proizv, Sum, CurDel):- CurDel1 is CurDel-1, !,
+														 sum_dividers_with_condition(X, Y1, Proizv, Sum, CurDel1),
+														 ((X mod CurDel)=:=0, nod(CurDel, Sum, R1), R1=:=1,
+														 	nod(CurDel, Proizv, R2), R2=\=1-> 
+														 	Y is Y1 + CurDel; Y is Y1).
