@@ -220,3 +220,35 @@ sum_dividers_with_condition(X, Y, Proizv, Sum, CurDel):- CurDel1 is CurDel-1, !,
 														 ((X mod CurDel)=:=0, nod(CurDel, Sum, R1), R1=:=1,
 														 	nod(CurDel, Proizv, R2), R2=\=1-> 
 														 	Y is Y1 + CurDel; Y is Y1).
+
+%p(+X, -Y)
+%DESCRIPTION:
+%Пентагональные числа P(n)=n(3n-1)/2
+%P(n)<1.000.000, найти пару P(i),P(j) => (P(i)+P(j)) is P(n) and P(i)-P(j) in P(n),
+%|i-j|->min, max(n) - 816
+%Для P(n) <1.000.000 решений не найдено, переделал под 10.000.000, max(n) - 2582
+p(X, Y):- Y is (X*(3*X-1)/2).
+
+%D=1+24P, x1 = 1+sqrt(1+24P)/6, 
+%if (x1 is int and x1 mod 6 ==0)-> vse horosho
+is_p(P):- X is integer((1+sqrt(1+24*P))/6), p(X, Y), Y=:=P.
+
+is_p(P, X):-X is integer((1+sqrt(1+24*P))/6), p(X, Y), Y=:=P.
+
+find_p:- find_p(1, 1, Y1, Y2),
+	write("Searching..."),nl,
+	write("First n: "), write(Y1), p(Y1, P1), write("   First P(n): "), write(P1), nl,
+	write("Second n: "), write(Y2), p(Y2, P2), write("   Second P(n): "), write(P2), nl,
+	write("Sum n: "), SumP is P1+P2, is_p(SumP, SumN), write(SumN), write("   Sum P(n): "), write(SumP), nl,
+	write("Diff n: "), DiffP is abs(P1-P2), is_p(DiffP, DiffN), write(DiffN), write("   Diff P(n): "), write(DiffP), nl,
+	write("Different: "), Different is Y2-Y1,write(Different).
+
+find_p(_, D, Y1, Y2):- D>2582, Y1 is 0, Y2 is 0.
+
+find_p(X1, D, Y1, Y2):- X2 is X1+D, X2>2582, NewD is D+1, find_p(1, NewD, Y1, Y2).
+
+find_p(X1, D, Y1, Y2):- X2 is X1+D, p(X1, P1), p(X2, P2), 
+					SumP is P1+P2, is_p(SumP),
+					DiffP is abs(P1-P2), is_p(DiffP), Y1 is X1, Y2 is X2.
+
+find_p(X1, D, Y1, Y2):- X2 is X1+1, find_p(X2, D, Y1, Y2), !.
