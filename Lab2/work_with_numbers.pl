@@ -274,9 +274,6 @@ find_p(X1, D, Y1, Y2):- X2 is X1+D, p(X1, P1), p(X2, P2),
 %Предикат, перебирающий номера пентагональных чисел
 find_p(X1, D, Y1, Y2):- X2 is X1+1, find_p(X2, D, Y1, Y2), !.
 
-
-
-
 %in_list(+List, +El)
 %DESCRIPTION:
 %Ищет элемент в листе
@@ -321,3 +318,22 @@ get_indices([], _, Cache, Cache, _):-!.
 get_indices([H|T], El, Cache, Result, Index):- H==El, NewIndex is Index+1, append(Cache,[Index], NewCache),
 									get_indices(T, El, NewCache, Result, NewIndex), !.
 get_indices([_|T], El, Cache, Result, Index):- NewIndex is Index + 1, get_indices(T, El, Cache, Result, NewIndex), !.
+
+%get_average(+X, -Y)
+%DESCRIPTION:
+%Считает среднюю арифметическую в списке X
+get_average(List, Average):- sum_list_up(List, Sum), length(List, Len), Average is Sum/Len.
+
+%get_max(+X, -Y)
+%DESCRIPTION:
+%Находит максимальное число в списке
+get_max([], 0):-!.
+get_max([H|T], Y):- get_max(T, Y1), (H>Y1->Y is H; Y is Y1),!.
+
+%list_between(+List, +A, +B, -Result)
+%DESCRIPTION:
+%Возвращает список из чисел которые лежат в интервале A..B
+list_between(List, Result):- get_average(List, A), get_max(List, Max), 
+							A1 is (integer(A)+1), list_between(Max, A1, Result),!.
+list_between(B, B, []):-!.
+list_between(B, Cur, Result):-Cur1 is Cur+1, list_between(B, Cur1, Result1), append(Result1,[Cur], Result).
