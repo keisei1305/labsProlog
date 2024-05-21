@@ -348,3 +348,15 @@ list_between:-
 	write("Enter list elements"), nl, read_list(List, Len),
 	write("Answer: "), list_between(List, Answer), nl, 
 	write_list(Answer).
+
+%get_special_list(+X, -Y)
+%DESCRIPTION:
+%Сценарий составления списка квадратов неотрицательных элементов списка, меньших 100
+%и встречающихся в массиве больше двух раз
+get_special_list(List, Result):- get_special_list(List, [], Result).
+get_special_list([], _, _):-!.
+get_special_list([H|T], Cache, Result):- H>0, H<100, in_list(Cache, H), get_special_list(T, Cache, Result), !.
+get_special_list([H|T], Cache, Result):- H>0, H<100, append(Cache, [H], Cache1), 
+									get_special_list(T, Cache1, Result1),
+									H2 is H*H, append(Result1,[H2], Result), !.
+get_special_list([_|T], Cache, Result):- get_special_list(T, Cache, Result).
