@@ -39,3 +39,78 @@ solve1:-
 	write("Pavlov is "), write(Prof2), nl,
 	write("Levickiy is "), write(Prof3), nl,
 	write("Saharov is "), write(Prof4), nl.
+
+%Task5
+/*
+Вариант 11 Пятеро студентов едут на велосипедах.
+Их зовут Сергей, Борис, Леонид, Григорий и Виктор.
+Велосипеды сделаны в пяти городах: Риге, Пензе, Львове, Харькове
+и Москве.
+Каждый из студентов родился в одном из этих городов, но ни один
+из студентов не едет на велосипеде, сделанном на его родине.
+Сергей едет на велосипеде, сделанном в Риге.
+Борис родом из Риги, у него велосипед из Пензы.
+У Виктора велосипед из Москвы.
+У Григория велосипед из Харькова.
+Виктор родом из Львова.
+Уроженец Пензы едет на велосипеде, сделанном на родине Леонида.
+Кто из студентов родом из Москвы ?
+*/
+
+% Определение предикатов для получения данных из списка
+get_velik([_, _, V], V).
+get_rodina([_, R, _], R).
+get_name([N, _, _], N).
+
+% Поиск элемента по родине
+find_by_rodina([H|_], R, H) :- get_rodina(H, R), !.
+find_by_rodina([_|T], R, X) :- find_by_rodina(T, R, X).
+
+solve2:-
+	Humans = [_, _, _, _, _],
+	member([sergey, Rodina1, Velik1], Humans),
+	member([boris, Rodina2, Velik2], Humans),
+	member([leonid, Rodina3, Velik3], Humans),
+	member([grisha, Rodina4, Velik4], Humans),
+	member([viktor, Rodina5, Velik5], Humans),
+
+	member([_, _,riga], Humans),
+	member([_, _,penza], Humans),
+	member([_, _,lvov], Humans),
+	member([_, _,harkov], Humans),
+	member([_, _,moskva], Humans),
+
+	member([_, penza, _], Humans),
+	member([_, riga, _], Humans),
+	member([_, lvov, _], Humans),
+	member([_, harkov, _], Humans),
+	member([_, moskva, _], Humans),
+
+	%Сергей едет на велосипеде, сделанном в Риге
+	Velik1 = riga,
+
+	%Борис родом из Риги, у него велосипед из Пензы.
+	Rodina2 = riga, 
+	Velik2 = penza,
+
+	%У Виктора велосипед из Москвы.
+	Velik5 = moskva,
+
+	%У Григория велосипед из Харькова.
+	Velik4 = harkov,
+
+	%Виктор родом из Львова.
+	Rodina5 = lvov,
+
+	%Уроженец Пензы едет на велосипеде, сделанном на родине Леонида.
+	find_by_rodina(Humans, penza, X), get_velik(X, V), V = Rodina3,
+
+	%Каждый из студентов родился в одном из этих городов, но ни один
+	%из студентов не едет на велосипеде, сделанном на его родине.
+	Rodina1 \= Velik1,
+	Rodina2 \= Velik2,
+	Rodina3 \= Velik3,
+	Rodina4 \= Velik4,
+	Rodina5 \= Velik5,
+
+	write(Humans).
