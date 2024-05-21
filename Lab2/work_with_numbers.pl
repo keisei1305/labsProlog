@@ -351,7 +351,7 @@ list_between:-
 
 %get_special_list(+X, -Y)
 %DESCRIPTION:
-%Сценарий составления списка квадратов неотрицательных элементов списка, меньших 100
+%Составляет список квадратов неотрицательных элементов списка, меньших 100
 %и встречающихся в массиве больше двух раз
 get_special_list(List, Result):- get_special_list(List, List, [], Result).
 get_special_list([],_, _, _):-!.
@@ -363,3 +363,14 @@ get_special_list([H|T], List, Cache, Result):- H>0, H<100, append(Cache, [H], Ca
 get_special_list([H|T], List, Cache, Result):- H>0, H<100, append(Cache, [H], Cache1),
                                         get_special_list(T, List, Cache1, Result), !.
 get_special_list([_|T], List, Cache, Result):- get_special_list(T, List, Cache, Result).
+
+%get_special_list/0
+%DESCRIPTION:
+%Сценарий составления списка квадратов неотрицательных элементов списка, меньших 100
+%и встречающихся в массиве больше двух раз
+get_special_list:-
+	write("Task 59: Find list with condition"), nl,
+	write("Enter list length"), nl, read(Len),
+	write("Enter list elements"), nl, read_list(List, Len),
+	write("Answer: "), get_special_list(List, Answer), nl, 
+	write_list(Answer).
