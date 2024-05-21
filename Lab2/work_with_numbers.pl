@@ -337,3 +337,14 @@ list_between(List, Result):- get_average(List, A), get_max(List, Max),
 							A1 is (integer(A)+1), list_between(Max, A1, Result),!.
 list_between(B, B, []):-!.
 list_between(B, Cur, Result):-Cur1 is Cur+1, list_between(B, Cur1, Result1), append(Result1,[Cur], Result).
+
+%list_between/0.
+%DESCRIPTION:
+%Сценарий для нахождения элементов листа, которые лежат в интервале 
+%от среднего значения до его максиального значение.
+list_between:-
+	write("Task 53: Find list with condition"), nl,
+	write("Enter list length"), nl, read(Len),
+	write("Enter list elements"), nl, read_list(List, Len),
+	write("Answer: "), list_between(List, Answer), nl, 
+	write_list(Answer).
