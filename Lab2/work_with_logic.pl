@@ -57,14 +57,6 @@ solve1:-
 Кто из студентов родом из Москвы ?
 */
 
-% Определение предикатов для получения данных из списка
-get_velik([_, _, V], V).
-get_rodina([_, R, _], R).
-get_name([N, _, _], N).
-
-% Поиск элемента по родине
-find_by_rodina([H|_], R, H) :- get_rodina(H, R), !.
-find_by_rodina([_|T], R, X) :- find_by_rodina(T, R, X).
 
 solve2:-
 	Humans = [_, _, _, _, _],
@@ -103,8 +95,8 @@ solve2:-
 	Rodina5 = lvov,
 
 	%Уроженец Пензы едет на велосипеде, сделанном на родине Леонида.
-	find_by_rodina(Humans, penza, X), get_velik(X, V), V = Rodina3,
-
+	member([_, penza, Rodina3], Humans),
+ 
 	%Каждый из студентов родился в одном из этих городов, но ни один
 	%из студентов не едет на велосипеде, сделанном на его родине.
 	Rodina1 \= Velik1,
@@ -113,4 +105,4 @@ solve2:-
 	Rodina4 \= Velik4,
 	Rodina5 \= Velik5,
 
-	write(Humans).
+	member([X, moskva, _], Humans), write(X), !.
