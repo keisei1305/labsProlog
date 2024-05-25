@@ -64,6 +64,41 @@ class Main {
         return curMax
     }
 
+    //Минимальная нечётная цифра в числе рекурсией вверх
+    fun minOddDigitUp(n: Int): Int{
+        if (n == 0) return 10
+        else
+        {
+            if (abs(n%10)%2==1)
+                return min(minOddDigitUp(n/10), abs(n%10))
+            else
+                return minOddDigitUp(n / 10)
+        }
+    }
+
+    //Минимальная нечётная цифра в числе рекурсией вниз
+    fun minOddDigitDown(n: Int): Int{
+        tailrec fun minOddDigitDown(n: Int, res:Int): Int{
+            if (n==0) return res
+            else
+                return if (n%10 < res && n%10%2==1)
+                    minOddDigitDown(n/10, n%10)
+                else minOddDigitDown(n / 10, res)
+        }
+        return minOddDigitDown(abs(n),10)
+    }
+
+    //Минимальная нечётная цифра в числе рекурсией вниз
+    fun minOddDigit(n: Int): Int{
+        var copy = abs(n)
+        var curMax = 10
+        while (copy!=0){
+            if (copy%10%2==1)
+                curMax = min(curMax, copy%10)
+            copy/=10
+        }
+        return curMax
+    }
 
     fun main() {
         println("Hello World!")

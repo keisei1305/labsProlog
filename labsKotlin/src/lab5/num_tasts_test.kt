@@ -72,4 +72,18 @@ internal class MainKtTest {
         assertEquals(2, main.maxDigitUp(-21))
         assertEquals(2, main.maxDigitDown(-21))
     }
+
+    @Test
+    fun minDigitTest(){
+        val main = Main()
+        assertEquals(3, main.minOddDigit(6582387))
+        assertEquals(3, main.minOddDigitUp(6582387))
+        assertEquals(3, main.minOddDigitDown(6582387))
+        assertEquals(10, main.minOddDigit(0))
+        assertEquals(10, main.minOddDigitUp(0))
+        assertEquals(10, main.minOddDigitDown(0))
+        assertEquals(1, main.minOddDigit(-21))
+        assertEquals(1, main.minOddDigitUp(-21))
+        assertEquals(1, main.minOddDigitDown(-21))
+    }
 }
