@@ -100,6 +100,19 @@ class Main {
         return curMax
     }
 
+    fun nod(a: Int, b: Int): Int {
+        var x = abs(a)
+        var y = abs(b)
+        while (y != 0) {
+            val temp = y
+            y = x % y
+            x = temp
+        }
+        return x
+    }
+
+    tailrec fun nodDown(a: Int, b: Int): Int = if (b == 0) abs(a) else nodDown(b, a % b)
+
     fun main() {
         println("Hello World!")
         val scanner = Scanner(`in`)

@@ -86,4 +86,17 @@ internal class MainKtTest {
         assertEquals(1, main.minOddDigitUp(-21))
         assertEquals(1, main.minOddDigitDown(-21))
     }
+
+    @Test
+    fun nodTest(){
+        val main = Main()
+        assertEquals(8, main.nod(24, 32))
+        assertEquals(8, main.nodDown(24, 32))
+        assertEquals(1, main.nod(13, 7))
+        assertEquals(1, main.nodDown(13, 7))
+        assertEquals(13, main.nod(13, 169))
+        assertEquals(13, main.nod(13, 169))
+        assertEquals(7, main.nod(-21, 14))
+        assertEquals(7, main.nodDown(-21, 14))
+    }
 }
