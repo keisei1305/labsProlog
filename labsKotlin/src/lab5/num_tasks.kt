@@ -113,11 +113,27 @@ class Main {
 
     tailrec fun nodDown(a: Int, b: Int): Int = if (b == 0) abs(a) else nodDown(b, a % b)
 
+    fun applyToDigits(num: Int, f: (Int, Int)->Int, startValue:Int): Int {
+        var copy = num
+        var result = startValue
+        while (copy!=0) {
+            result = f(copy%10, result)
+            copy/=10
+        }
+        return result
+    }
+
+    fun modMaxDigit(num: Int): Int = applyToDigits(num, {a: Int, b: Int -> max(abs(a), b)}, 0)
+    fun modMinOddDigit(num: Int): Int = applyToDigits(num, {a: Int, b: Int ->
+        if (abs(a)%10%2 == 1)
+            min(abs(a)%10, b)
+        else
+            b
+    }, 10)
+
     fun main() {
-        println("Hello World!")
-        val scanner = Scanner(`in`)
-        val x: Int = scanner.nextInt()
-        println(sumcd(x))
+        println(modMaxDigit(1238421))
+        println(modMinOddDigit(23842))
     }
 }
 
