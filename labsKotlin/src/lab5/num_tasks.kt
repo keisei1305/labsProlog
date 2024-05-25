@@ -1,6 +1,6 @@
 import java.lang.System.`in`
 import java.util.*
-
+import kotlin.math.*
 class Main {
     //максимум из 3
     fun max3(x: Int, y: Int, z: Int): Int = if (x > y) if (x > z) x else z else if (y > z) y else z
@@ -34,6 +34,36 @@ class Main {
     fun muld(n: Int): Int = digits(n, 1) { a, b -> (a * b) }
     fun maxd(n: Int): Int = digits(n / 10, n % 10) { a, b -> if (a > b) a else b }
     fun mind(n: Int): Int = digits(n / 10, n % 10) { a, b -> if (a < b) a else b }
+
+    //Максимальная цифра в числе рекурсией вверх
+    fun maxDigitUp(n: Int): Int{
+        if (n==0) return 0
+        else return max(abs(n%10), maxDigitUp(n/10))
+    }
+
+    //Максимальная цифра в числе рекурсией вниз
+    fun maxDigitDown(n: Int): Int{
+        tailrec fun maxDigitDown(n:Int, res:Int): Int{
+            if (n==0) return res
+            else
+                return if (n%10 > res)
+                    maxDigitDown(n/10, n%10)
+                else maxDigitDown(n / 10, res)
+        }
+        return  maxDigitDown(abs(n), 0)
+    }
+
+    //Максимальная цифра в числе циклом
+    fun maxDigit(n: Int): Int{
+        var copy = abs(n)
+        var curMax = 0
+        while (copy!=0){
+            curMax = max(curMax, copy%10)
+            copy/=10
+        }
+        return curMax
+    }
+
 
     fun main() {
         println("Hello World!")

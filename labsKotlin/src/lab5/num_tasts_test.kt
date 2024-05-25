@@ -58,4 +58,18 @@ internal class MainKtTest {
         val expected = 2
         assertEquals(expected, main.mind(923745))
     }
+
+    @Test
+    fun maxDigitTest(){
+        val main = Main()
+        assertEquals(8, main.maxDigit(12321857))
+        assertEquals(8, main.maxDigitUp(12321857))
+        assertEquals(8, main.maxDigitDown(12321857))
+        assertEquals(0, main.maxDigit(0))
+        assertEquals(0, main.maxDigitUp(0))
+        assertEquals(0, main.maxDigitDown(0))
+        assertEquals(2, main.maxDigit(-21))
+        assertEquals(2, main.maxDigitUp(-21))
+        assertEquals(2, main.maxDigitDown(-21))
+    }
 }
