@@ -1,5 +1,3 @@
-import java.lang.System.`in`
-import java.util.*
 import kotlin.math.*
 class Main {
     //максимум из 3
@@ -144,9 +142,36 @@ class Main {
         return (1..abs(num)).filter { abs(num)%it == 0 && nod(it, sum) ==1 && nod(it, proiz)!=1}.count()
     }
 
+    fun p(n: Int):Int = n*(3*n-1)/2
+    fun isP(y:Int):Boolean {
+        if (y<=0) return false
+        val n:Int = (1+sqrt(1+24*y.toDouble())/6).toInt()
+        return p(n)==y
+    }
+
+    fun findP(): Int{
+        var d:Int = 1
+        var n1:Int; var n2:Int; var y1:Int; var y2:Int
+        for(i in 1..2582){
+           d=i
+            for(j in 1..2582){
+                n1 = j
+                n2 = n1+d
+                if (n2>2582)
+                    break
+                else {
+                    y1 = p(n1)
+                    y2 = p(n2)
+                    if (isP(y1+y2) && isP(y2-y1))
+                        return d
+                }
+            }
+        }
+        return -1
+    }
+
     fun main() {
-        println(modMaxDigit(1238421))
-        println(modMinOddDigit(23842))
+        println(findP())
     }
 }
 
