@@ -1,4 +1,6 @@
 import kotlin.math.*
+import kotlin.reflect.KFunction
+
 class Main {
     //максимум из 3
     fun max3(x: Int, y: Int, z: Int): Int = if (x > y) if (x > z) x else z else if (y > z) y else z
@@ -170,8 +172,22 @@ class Main {
         return -1
     }
 
+    fun getFuncByName(name: String): ((Int)->Int){
+        val funcs:Map<String, (Int)->Int> = mapOf(
+            "maxDigit" to ::maxDigit,
+            "maxDigitUp" to ::maxDigitUp,
+            "maxDigitDown" to ::maxDigitDown,
+            "minOddDigit" to ::minOddDigit,
+            "minOddDigitUp" to ::minOddDigitUp,
+            "minOddDigitDown" to ::minOddDigitDown
+        )
+        return funcs.getOrElse(name){throw NullPointerException() }
+    }
+
     fun main() {
-        println(findP())
+        val input = "C:\\Users\\admin\\Documents\\GitHub\\labsProlog\\labsKotlin\\input"
+        val output = "C:\\Users\\admin\\Documents\\GitHub\\labsProlog\\labsKotlin\\output"
+        runTask6(arrayOf(input, output))
     }
 }
 
