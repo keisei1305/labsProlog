@@ -99,4 +99,40 @@ internal class MainKtTest {
         assertEquals(7, main.nod(-21, 14))
         assertEquals(7, main.nodDown(-21, 14))
     }
+
+    @Test
+    fun countDividersNoDiv3(){
+        val main = Main()
+        assertEquals(2, main.countDividersNoDiv3(6))
+        assertEquals(4, main.countDividersNoDiv3(-8))
+        assertEquals(0, main.countDividersNoDiv3(0))
+        assertEquals(1, main.countDividersNoDiv3(3))
+    }
+
+    @Test
+    fun sumDigits(){
+        val main = Main()
+        assertEquals(6, main.sumDigits(123))
+        assertEquals(6, main.sumDigits(-123))
+        assertEquals(8, main.sumDigits(323))
+        assertEquals(0, main.sumDigits(0))
+    }
+
+    @Test
+    fun proizDigits(){
+        val main = Main()
+        assertEquals(6, main.proizDigits(123))
+        assertEquals(6, main.proizDigits(-123))
+        assertEquals(18, main.proizDigits(323))
+        assertEquals(0, main.proizDigits(0))
+    }
+
+    @Test
+    fun countSpecialDividers(){
+        val main = Main()
+        assertEquals(2,main.countSpecialDividers(12))
+        assertEquals(0,main.countSpecialDividers(0))
+        assertEquals(2,main.countSpecialDividers(-12))
+        assertEquals(0,main.countSpecialDividers(24))
+    }
 }

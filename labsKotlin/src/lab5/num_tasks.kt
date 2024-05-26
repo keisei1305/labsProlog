@@ -131,6 +131,19 @@ class Main {
             b
     }, 10)
 
+    fun countDividersNoDiv3(num: Int) = (1..abs(num)).filter { abs(num) % it == 0 && it % 3 !=0}.count()
+    fun sumDigits(num: Int) = applyToDigits(abs(num), {a:Int, b:Int -> a+b}, 0)
+    fun proizDigits(num: Int):Int  {
+        return if (num!=0) applyToDigits(abs(num), {a:Int, b:Int -> a*b}, 1)
+        else 0
+    }
+
+    fun countSpecialDividers(num:Int):Int{
+        val sum = sumDigits(num)
+        val proiz = proizDigits(num)
+        return (1..abs(num)).filter { abs(num)%it == 0 && nod(it, sum) ==1 && nod(it, proiz)!=1}.count()
+    }
+
     fun main() {
         println(modMaxDigit(1238421))
         println(modMinOddDigit(23842))
